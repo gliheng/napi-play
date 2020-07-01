@@ -10,7 +10,7 @@
     "cmake-js": "^6.1.0"
   },
   "scripts": {
-    "build": "cmake-js compile --runtime node --runtime-version=12.13.0 --arch=x64"
+    "install": "cmake-js compile --runtime node --runtime-version=12.18.1 --arch=x64"
   },
   "keywords": [],
   "author": "",
