@@ -1,2 +1,2 @@
 var addon = require('bindings')('addon');
-console.log(addon.hello());
+console.log(addon());

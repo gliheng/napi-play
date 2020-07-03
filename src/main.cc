@@ -11,9 +11,9 @@ napi_value Method(napi_env env, napi_callback_info info) {
   { name, 0, func, 0, 0, 0, napi_default, 0 }
 
 napi_value Init(napi_env env, napi_value exports) {
-  napi_property_descriptor desc = DECLARE_NAPI_METHOD("hello", Method);
-  NAPI_CALL(env, napi_define_properties(env, exports, 1, &desc));
-  return exports;
+  napi_value new_exports;
+  NAPI_CALL(env, napi_create_function(env, "", NAPI_AUTO_LENGTH, Method, nullptr, &new_exports));
+  return new_exports;
 }
 
 NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
