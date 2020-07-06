@@ -2,9 +2,24 @@
 #include "napi_assert.h"
 
 napi_value Method(napi_env env, napi_callback_info info) {
-  napi_value world;
-  NAPI_CALL(env, napi_create_string_utf8(env, "world", 5, &world));
-  return world;
+  size_t argc = 1;
+  napi_value func;
+  NAPI_CALL(env, napi_get_cb_info(env, info, &argc, &func, nullptr, nullptr));
+
+  napi_valuetype type;
+  NAPI_CALL(env, napi_typeof(env, func, &type));
+
+  if (type != napi_function) {
+    NAPI_CALL(env, napi_throw_type_error(env, nullptr, "Must pass a function"));
+    return nullptr;
+  }
+
+  napi_value global;
+  NAPI_CALL(env, napi_get_global(env, &global));
+
+  napi_value ret;
+  NAPI_CALL(env, napi_call_function(env, global, func, 0, nullptr, &ret));
+  return ret;
 }
 
 #define DECLARE_NAPI_METHOD(name, func)                          \
