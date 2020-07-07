@@ -1,2 +1,4 @@
 var addon = require('bindings')('addon');
-console.log(addon.hello());
+addon.readFile('package.json').then(function(ret) {
+    console.log('file content:', ret);
+});
