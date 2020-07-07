@@ -1,2 +1,4 @@
 var addon = require('bindings')('addon');
-console.log(addon.hello());
+let obj = addon.getObject();
+console.log('obj:', obj);
+console.log('obj.rand:', obj.rand);
