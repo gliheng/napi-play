@@ -1,2 +1,9 @@
 var addon = require('bindings')('addon');
-console.log(addon.hello());
+addon.connect('127.0.0.1:3456', {
+  connect() {
+    console.log('Connected!');
+  },
+  data(data) {
+    console.log('Got data:', data);
+  },
+});
