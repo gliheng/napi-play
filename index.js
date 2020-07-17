@@ -1,2 +1,4 @@
 var addon = require('bindings')('addon');
-console.log(addon.hello());
+addon.setTimeout(function() {
+    console.log('timeout!');
+}, 1000);
