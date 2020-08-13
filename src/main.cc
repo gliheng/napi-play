@@ -21,7 +21,7 @@ void OnTimer(uv_timer_t *handle) {
   NAPI_CALL_RETURN_VOID(env, napi_close_handle_scope(env, scope));
 }
 
-napi_value SetTimeout(napi_env env, napi_callback_info info) {
+napi_value SetInterval(napi_env env, napi_callback_info info) {
   size_t argc = 2;
   napi_value argv[2];
   NAPI_CALL(env, napi_get_cb_info(env, info, &argc, argv, nullptr, nullptr));
@@ -63,7 +63,7 @@ napi_value SetTimeout(napi_env env, napi_callback_info info) {
   { name, 0, func, 0, 0, 0, napi_default, 0 }
 
 napi_value Init(napi_env env, napi_value exports) {
-  napi_property_descriptor desc = DECLARE_NAPI_METHOD("setTimeout", SetTimeout);
+  napi_property_descriptor desc = DECLARE_NAPI_METHOD("setInterval", SetInterval);
   NAPI_CALL(env, napi_define_properties(env, exports, 1, &desc));
   return exports;
 }
