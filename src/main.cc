@@ -17,13 +17,12 @@ void * connect_socket(void* arg) {
   napi_release_threadsafe_function(job->connect_cbk, napi_tsfn_abort);
 
   napi_acquire_threadsafe_function(job->data_cbk);
-  int *result = (int *) malloc(sizeof(int));
   for (int i = 0; i < 5; i++) {
+    int *result = (int *) malloc(sizeof(int));
     *result = i;
     napi_call_threadsafe_function(job->data_cbk, result, napi_tsfn_nonblocking);
     sleep(1);
   }
-  free(result);
   napi_release_threadsafe_function(job->data_cbk, napi_tsfn_abort);
 
   free(job);
@@ -36,6 +35,7 @@ void call_js(napi_env env, napi_value js_callback, void* context, void* data) {
   NAPI_CALL_RETURN_VOID(env, napi_create_int32(env, *i, &value));
   NAPI_CALL_RETURN_VOID(env, napi_get_global(env, &global));
   NAPI_CALL_RETURN_VOID(env, napi_call_function(env, global, js_callback, 1, &value, nullptr));
+  free(i);
 }
 
 pthread_t thread;
