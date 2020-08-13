@@ -3,7 +3,7 @@
 
 napi_value Method(napi_env env, napi_callback_info info) {
   napi_value world;
-  NAPI_CALL(env, napi_create_string_utf8(env, "world", 5, &world));
+  NAPI_CALL(env, napi_create_string_utf8(env, "world", NAPI_AUTO_LENGTH, &world));
   return world;
 }
 
