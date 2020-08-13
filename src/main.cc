@@ -7,6 +7,7 @@
 typedef struct {
   char* path;
   char* data;
+  napi_async_work request;
   napi_deferred deferred;
 } FileCommand;
 
@@ -14,7 +15,7 @@ void execute(napi_env env, void* data) {
   FileCommand* cmd = (FileCommand*) data;
   FILE* file = fopen(cmd->path, "r");
   size_t len = 1000;
-  char* buf = (char*) malloc(len + 1);
+  char* buf = (char*) calloc(1, len + 1);
   fread(buf, len, 1, file);
   cmd->data = buf;
 }
@@ -33,6 +34,7 @@ void complete(napi_env env, napi_status status, void* data) {
     NAPI_CALL_RETURN_VOID(env, napi_reject_deferred(env, cmd->deferred, error));
   }
   free(cmd->path);
+  NAPI_CALL_RETURN_VOID(env, napi_delete_async_work(env, cmd->request));
   delete cmd;
 }
 
@@ -60,10 +62,9 @@ napi_value Method(napi_env env, napi_callback_info info) {
   NAPI_CALL(env, napi_create_promise(env, &cmd->deferred, &promise));
 
   napi_value name;
-  napi_async_work job;
   NAPI_CALL(env, napi_create_string_latin1(env, "async work", NAPI_AUTO_LENGTH, &name));
-  NAPI_CALL(env, napi_create_async_work(env, nullptr, name, execute, complete, (void*) cmd, &job));
-  NAPI_CALL(env, napi_queue_async_work(env, job));
+  NAPI_CALL(env, napi_create_async_work(env, nullptr, name, execute, complete, (void*) cmd, &cmd->request));
+  NAPI_CALL(env, napi_queue_async_work(env, cmd->request));
   return promise;
 }
 
